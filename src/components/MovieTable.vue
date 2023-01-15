@@ -3,7 +3,7 @@
     <table>
       <thead>
         <tr>
-          <th>Platz</th>
+          <th></th>
           <th>Wkt.</th>
           <th>Film</th>
           <th>Rating</th>
@@ -13,7 +13,7 @@
       <tbody>
         <tr v-for="movie in movies">
           <td>{{ movie.rank }}</td>
-          <td><div class="confidence" :style=" { width: movie.confidence/1.5+'px' }"/></td>
+          <td class="confidence-cell"><div class="confidence" :style=" { width: movie.confidence+'%' }"/></td>
           <td><a :href="movie.imdblink">{{ movie.name }}</a></td>
           <td>{{ movie.rating }}</td>
           <td>{{ getDaysTill(movie.release) }}</td>
@@ -62,7 +62,10 @@ td:last-child, th:last-child {
 }
 .confidence {
   height: 15px;
-  background: blue;
+  background: #252525;
   width: 0;
+}
+.confidence-cell {
+  width: 60px;
 }
 </style>

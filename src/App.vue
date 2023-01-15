@@ -47,9 +47,16 @@ export default {
     },
     addLastCinema(cinema) {
       let arr = this.getLastCinemas();
+      // remove one if full
       if (arr.length >= 10) {
         arr = arr.slice(0, 9);
       }
+      // remove if already in it
+      let index = arr.indexOf(cinema);
+      if (index >= 0) {
+        arr = arr.splice(index, 1);
+      }
+      // add to the beginning
       arr.unshift(cinema);
       localStorage.setItem("lastCinemas", JSON.stringify(arr));
     },
@@ -68,17 +75,12 @@ export default {
     this.movies.push({rank: 4, name: "Rache auf texanisch", confidence: 66, rating: "5/10", imdblink: "google.com"});
     this.movies.push({rank: 5, name: "Final Cut of the Dead", confidence: 63, rating: "5/10", imdblink: "google.com"});
 
-    //this.$api.getAllCinemas().then(cinemas => this.cinemaList = cinemas);
+    this.$api.getAllCinemas().then(cinemas => this.cinemaList = cinemas);
   },
 };
 </script>
 
 <style>
-body {
-  padding: 0;
-  margin: 0;
-  font: 16px Arial;
-}
 #heading-back {
   background: #8B0B45;
   width: 100%;
@@ -119,14 +121,13 @@ h1, h2 {
 }
 .back-button {
   position: absolute;
-  filter: invert(100%);
   float: left;
   height: 40px;
   left: 10px;
 }
 .back-button:hover {
   cursor: pointer;
-  background: #bababa;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 20px;
 }
 </style>

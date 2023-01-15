@@ -29,7 +29,7 @@ export default {
   },
   mounted() {
     document.addEventListener("click", this.closeSuggestions);
-    //this.$api.getAllCinemas().then(cinemas => this.cinemas = cinemas);
+    this.$api.getAllCinemas().then(cinemas => this.cinemas = cinemas);
   },
   unmounted() {
     document.removeEventListener("click", this.closeSuggestions);

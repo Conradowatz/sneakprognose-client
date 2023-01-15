@@ -1,0 +1,10 @@
+body {
+    padding: 0;
+    margin: 0;
+    font: 16px Arial;
+}
+a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
