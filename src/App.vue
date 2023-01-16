@@ -10,10 +10,10 @@
     <CinemaSearch v-if="!selectedCinema" @select="selectCinema"/>
     <div class="two-split">
       <CinemaTable :cinemas="makeCinemaList()" @select="selectCinema" v-if="!selectedCinema && !isAddHint"/>
-      <MovieTable :movies="movies" v-if="selectedCinema && !isAddHint"/>
-      <HintTable v-if="selectedCinema && !isAddHint" @add="isAddHint = true"/>
+      <MovieTable :movies="movies" v-if="selectedCinema && !isAddHint" :cinemaId="selectedCinema.id"/>
+      <HintTable v-if="selectedCinema && !isAddHint" @add="isAddHint = true" :cinemaId="selectedCinema.id"/>
     </div>
-    <AddHintContainer v-if="isAddHint" cinema="KOTHAUSEN" @close="isAddHint = false"/>
+    <AddHintContainer v-if="isAddHint" :cinema="selectedCinema" @close="isAddHint = false" @added="isAddHint = false"/>
   </div>
 </template>
 
@@ -109,7 +109,7 @@ h1, h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  padding: 10px;
 }
 .two-split {
   margin-top: 20px;

@@ -10,7 +10,29 @@ const api = {
     getResponse(endpoint: string): Promise<any> {
         return new Promise(((resolve, reject) => {
             fetch(this.baseUrl + endpoint)
-                .then((response) => resolve(response.json()))
+                .then((response) => {
+                    if (response.status != 200) {
+                        reject(response.text());
+                    } else {
+                        resolve(response.json());
+                    }
+                })
+                .catch((reason => reject(reason)));
+        }));
+    },
+    postUpdate(endpoint: string, data: any): Promise<any> {
+        return new Promise(((resolve, reject) => {
+            fetch(this.baseUrl + endpoint, {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: new Headers({"Content-Type": "application/json"})
+            }).then((response) => {
+                    if (response.status != 200) {
+                        reject(response.text());
+                    } else {
+                        resolve(response.json());
+                    }
+                })
                 .catch((reason => reject(reason)));
         }));
     },
@@ -26,7 +48,6 @@ const api = {
                     for (let city of cities) {
                         for (let cinema of city.cinemas) {
                             cinema["city"] = city.name;
-                            console.log(cinema);
                             this.allCinemas.push(cinema);
                         }
                     }
@@ -49,6 +70,38 @@ const api = {
                     .catch(reason => reject(reason));
             }
         }))
+    },
+    getHints(cinemaId: number): Promise<
+        {id: number, date: string, score: number, movie:
+                {imdbId: string, name: string, releaseDate: string, rating: number}
+        }[]> {
+        return this.getResponse(`hint?cinemaId=${cinemaId}`);
+    },
+    vote(hintId: number, isUpvote: boolean, count: number): Promise<string> {
+        return this.postUpdate("vote", {
+            hintId: hintId,
+            isUpvote: isUpvote,
+            count: count
+        });
+    },
+    getSneaks(cinemaId: number): Promise<any[]> {
+        return this.getResponse(`sneak?cinemaId=${cinemaId}`);
+    },
+    addHint(cinemaId: number, sneakDate: string, imdbLink: string, startDate?: string): Promise<any> {
+        if (startDate != null && startDate.trim() != "") {
+            return this.postUpdate("hint", {
+                cinemaId: cinemaId,
+                sneakDate: sneakDate,
+                imdbLink: imdbLink,
+                startDate: startDate
+            });
+        } else {
+            return this.postUpdate("hint", {
+                cinemaId: cinemaId,
+                sneakDate: sneakDate,
+                imdbLink: imdbLink
+            });
+        }
     }
 }
 app.config.globalProperties.$api = api;

@@ -1,16 +1,21 @@
 <template>
   <DataContainer title="Sneak einreichen" hasClose="true" @close="this.$emit('close')">
     <div class="addHintContainer">
-      <h4>Kino: {{ cinema }}</h4>
+      <h4>Kino: {{ cinema.name }}</h4>
       <form>
-        <label>Datum</label>
-        <input type="date" v-model="date">
+        <label>Datum*</label>
+        <input type="date" v-model="sneakDate">
         <br/>
-        <label>IMDB:</label>
-        <input type="text" v-model="imdblink" placeholder="https://www.imdb.com/title/...">
+        <label>IMDB*</label>
+        <input type="text" v-model="imdbLink" placeholder="https://www.imdb.com/title/...">
+        <label>Kinostart</label>
+        <input type="date" v-model="startDate">
         <br/>
         <input type="button" value="Einreichen" @click="submit">
       </form>
+      <div class="error" v-if="error">
+        {{ this. error }}
+      </div>
     </div>
   </DataContainer>
 </template>
@@ -21,15 +26,29 @@ export default {
   name: "AddHintContainer",
   components: {DataContainer},
   props: ["cinema"],
+  emits: ["added"],
   data() {
     return {
-      date: "",
-      imdblink: "",
+      sneakDate: "",
+      imdbLink: "",
+      startDate: "",
+      error: null
     }
   },
   methods: {
     submit() {
-      console.log(this.date);
+      this.error = null;
+      this.$api.addHint(this.cinema.id, this.sneakDate, this.imdbLink, this.startDate)
+          .then((response) => {
+            if ("error" in response) {
+              this.error = response.error;
+            } else {
+              this.$emit("added", this.response);
+            }
+          })
+          .catch((reason) => {
+            this.error = "Fehler beim Verarbeiten der Daten.";
+          })
     }
   }
 }

@@ -11,9 +11,9 @@
       </thead>
       <tbody>
       <tr v-for="hint in hints">
-        <td>{{ hint.date }}</td>
+        <td>{{ parseDate(hint.date) }}</td>
         <td>
-          <a :href="hint.imdblink">{{ hint.movie }}</a>
+          <a :href="`https://www.imdb.com/title/${hint.movie.imdbId}`" target="_blank">{{ hint.movie.name }}</a>
         </td>
         <td>{{ hint.score }}</td>
         <td>
@@ -31,13 +31,10 @@ import DataContainer from "./DataContainer.vue";
 export default {
   name: "HintTable",
   components: {DataContainer},
+  props: ["cinemaId"],
   data() {
     return {
-        hints: [
-          {date: "12.01.23", movie: "Radio Rebel", score: 12, imdblink: "google.com", id: 1},
-          {date: "12.01.23", movie: "Radio Rebel", score: 12, imdblink: "google.com", id: 2},
-          {date: "12.01.23", movie: "Radio Rebel", score: 12, imdblink: "google.com", id: 3}
-        ]
+        hints: []
     }
   },
   methods: {
@@ -65,20 +62,37 @@ export default {
       if (localStorage.getItem("available") == null) return;
 
       if (this.hasSavedVote(hint.id, isUp)) {
-        this.removeSavedVote(hint.id, isUp);
-        hint.score += isUp ? -1 : 1;
+        this.attemptVote(hint, !isUp, 1, true, isUp, false);
       } else {
         if (this.hasSavedVote(hint.id, !isUp)) {
-          this.removeSavedVote(hint.id, !isUp);
-          hint.score += isUp ? 1 : -1;
+          this.attemptVote(hint, isUp, 2, true, !isUp, true);
+        } else {
+          this.attemptVote(hint, isUp, 1, false, null, true);
         }
-        this.addSavedVote(hint.id, isUp);
-        hint.score += isUp ? 1 : -1;
       }
+    },
+    attemptVote(hint, isUpvote, count, remove, removeUp, save) {
+      this.$api.vote(hint.id, isUpvote, count).then((newHint => {
+        if (remove) {
+          this.removeSavedVote(hint.id, removeUp);
+        }
+        if (save) {
+          this.addSavedVote(hint.id, isUpvote);
+        }
+        hint.score = newHint.score;
+      }));
+    },
+    parseDate(dateString) {
+      let dateInts = dateString.split("-");
+      return `${dateInts[2]}.${dateInts[1]}.${dateInts[0]}`;
     }
   },
   mounted() {
     localStorage.setItem("available", "true");
+    this.$api.getHints(this.cinemaId)
+        .then((hints) => {
+          this.hints = hints;
+        });
   }
 }
 </script>

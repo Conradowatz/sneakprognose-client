@@ -11,12 +11,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="movie in movies">
-          <td>{{ movie.rank }}</td>
-          <td class="confidence-cell"><div class="confidence" :style=" { width: movie.confidence+'%' }"/></td>
-          <td><a :href="movie.imdblink">{{ movie.name }}</a></td>
-          <td>{{ movie.rating }}</td>
-          <td>{{ getDaysTill(movie.release) }}</td>
+        <tr v-for="(sneak, index) in sneaks">
+          <td>{{ index + 1 }}</td>
+          <td class="confidence-cell"><div class="confidence" :style=" { width: 100*sneak.confidence/maxConfidence+'%' }"/></td>
+          <td><a :href="`https://www.imdb.com/title/${sneak.movie_imdbId}`">{{ sneak.movie_name }}</a></td>
+          <td class="rating">{{ (sneak.movie_rating/10).toFixed(1) }}</td>
+          <td class="daysTill">+{{ sneak.daysTill }}</td>
         </tr>
       </tbody>
     </table>
@@ -28,11 +28,25 @@ import DataContainer from "@/components/DataContainer.vue";
 export default {
   name: "MovieTable",
   components: {DataContainer},
-  props: ["title", "movies"],
-  methods: {
-    getDaysTill() {
-      return "+3";
+  props: ["cinemaId"],
+  methods: {},
+  data() {
+    return {
+      sneaks: [],
+      maxConfidence : 0
     }
+  },
+  mounted() {
+    this.$api.getSneaks(this.cinemaId).then(sneaks => {
+      this.sneaks = sneaks;
+      for (let sneak of sneaks) {
+        let confidence = parseFloat(sneak.confidence);
+        if (confidence > this.maxConfidence) {
+          this.maxConfidence = confidence;
+        }
+      }
+      console.log(this.maxConfidence);
+    })
   }
 }
 </script>
@@ -67,5 +81,8 @@ td:last-child, th:last-child {
 }
 .confidence-cell {
   width: 60px;
+}
+.daysTill, .rating {
+  text-align: right;
 }
 </style>
