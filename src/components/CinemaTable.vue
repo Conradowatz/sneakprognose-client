@@ -1,8 +1,10 @@
 <template>
   <DataContainer id="cinema-container" title="Kinos">
-      <p v-for="cinema in cinemas" @click="selectCinema(cinema)">
+    <RouterLink :to="`/cinema/${cinema.id}`" v-for="cinema in cinemaList">
+      <p>
         {{ cinema.name + " " + cinema.city }}
       </p>
+    </RouterLink>
   </DataContainer>
 </template>
 
@@ -11,12 +13,18 @@ import DataContainer from "@/components/DataContainer.vue";
 export default {
   name: "CinemaTable",
   components: {DataContainer},
-  props: ["cinemas"],
-  emits: ["select"],
-  methods: {
-    selectCinema(cinema) {
-      this.$emit("select", cinema)
+  data() {
+    return {
+      cinemaList: []
     }
+  },
+  mounted() {
+    this.$api.getAllCinemas().then((allCinemas) => {
+      this.cinemaList = this.$api.getLastCinemas();
+      for (let i = 0; i < 10-this.cinemaList.length; i++) {
+        this.cinemaList.push(allCinemas[Math.floor(Math.random()*allCinemas.length)])
+      }
+    })
   }
 }
 </script>
@@ -24,14 +32,14 @@ export default {
 <style scoped>
 p {
   margin: 0;
-  padding: 5px;
-  padding-left: 20px;
+  padding: 5px 5px 5px 20px;
+  font-weight: normal;
 }
-p:nth-child(even) {
+a:nth-child(even) > p {
   background: #dedede;
 }
 
-p:hover {
+a:hover > p {
   background: #c39696;
   cursor: pointer;
 }

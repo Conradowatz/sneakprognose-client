@@ -1,24 +1,26 @@
 <template>
-  <DataContainer title="Vergangene Sneaks" has-add="true">
+  <DataContainer title="Vergangene Sneaks" has-add="true" @add="this.$router.push(`/cinema/${cinemaId}/add_sneak`)">
     <table>
       <thead>
       <tr>
-        <th>Datum</th>
+        <th class="date">Datum</th>
         <th>Film</th>
         <th>Score</th>
-        <th>Aktion</th>
+        <th class="action">Aktion</th>
       </tr>
       </thead>
       <tbody>
       <tr v-for="hint in hints">
-        <td>{{ parseDate(hint.date) }}</td>
+        <td class="date"><div class="date-part">{{ parseDay(hint.date) }}</div><div>{{ parseYear(hint.date) }}</div></td>
         <td>
-          <a :href="`https://www.imdb.com/title/${hint.movie.imdbId}`" target="_blank">{{ hint.movie.name }}</a>
+          <a :href="`https://www.themoviedb.org/movie/${hint.movie.tmdbId}`" target="_blank">{{ hint.movie.name }}</a>
         </td>
-        <td>{{ hint.score }}</td>
-        <td>
-          <img src="../assets/thumb_up.png" alt="Upvote" @click="vote(hint, true)" :class="{ voted: hasSavedVote(hint.id, true) }">
-          <img src="../assets/thumb_down.png" alt="Downvote" @click="vote(hint, false)" :class="{ voted: hasSavedVote(hint.id, false) }">
+        <td class="score">{{ hint.score }}</td>
+        <td class="action">
+          <img src="../assets/right.png" alt="Upvote" @click="vote(hint, true)"
+               :class="{ 'voted-up': hasSavedVote(hint.id, true), upvote: true }">
+          <img src="../assets/wrong.png" alt="Downvote" @click="vote(hint, false)"
+               :class="{ 'voted-down': hasSavedVote(hint.id, false), downvote: true }">
         </td>
       </tr>
       </tbody>
@@ -32,6 +34,11 @@ export default {
   name: "HintTable",
   components: {DataContainer},
   props: ["cinemaId"],
+  watch: {
+    cinemaId() {
+      this.refreshHints();
+    }
+  },
   data() {
     return {
         hints: []
@@ -82,17 +89,24 @@ export default {
         hint.score = newHint.score;
       }));
     },
-    parseDate(dateString) {
+    parseDay(dateString) {
       let dateInts = dateString.split("-");
-      return `${dateInts[2]}.${dateInts[1]}.${dateInts[0]}`;
+      return `${dateInts[2]}.${dateInts[1]}.`;
+    },
+    parseYear(dateString) {
+      let dateInts = dateString.split("-");
+      return dateInts[0];
+    },
+    refreshHints() {
+      this.$api.getHints(this.cinemaId)
+          .then((hints) => {
+            this.hints = hints;
+          });
     }
   },
   mounted() {
     localStorage.setItem("available", "true");
-    this.$api.getHints(this.cinemaId)
-        .then((hints) => {
-          this.hints = hints;
-        });
+    this.refreshHints();
   }
 }
 </script>
@@ -108,7 +122,7 @@ td, th {
 }
 th {
   text-align: start;
-  background: #8B0B45;
+  background: #130b38;
   color: white;
 }
 tr:nth-child(even) {
@@ -125,11 +139,35 @@ img {
   padding-right: 10px;
   filter: none;
 }
-img.voted {
+img.voted-up {
+  filter: invert(13%) sepia(98%) saturate(4354%) hue-rotate(88deg) brightness(88%) contrast(88%);
+}
+img.voted-down {
   filter: invert(9%) sepia(98%) saturate(5203%) hue-rotate(325deg) brightness(77%) contrast(93%);
 }
-img:hover {
-  filter: invert(9%) sepia(98%) saturate(5203%) hue-rotate(325deg) brightness(77%) contrast(93%);
+img.upvote:hover {
+  filter: invert(13%) sepia(98%) saturate(4354%) hue-rotate(88deg) brightness(88%) contrast(88%);
   cursor: pointer;
+}
+img.downvote:hover {
+  filter: invert(14%) sepia(53%) saturate(4850%) hue-rotate(356deg) brightness(88%) contrast(110%);
+  cursor: pointer;
+}
+.date-part {
+  float: left;
+}
+.date {
+  display: flex;
+}
+@media screen and (max-width: 450px) {
+  .date {
+    display: block;
+  }
+}
+.action {
+  min-width: 60px;
+}
+.score {
+  text-align: right;
 }
 </style>
