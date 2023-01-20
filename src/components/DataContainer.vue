@@ -24,12 +24,12 @@ export default {
   border: solid #BFBFBF 1px;
   border-radius: 7px;
   width: 500px;
-  max-width: 100vw;
+  max-width: 95vw;
   background: #F2F2F2;
 }
 .subc-heading {
-  background: #8B0B45;
-  border: solid #8B0B45 1px;
+  background: #130b38;
+  border: solid #130b38 1px;
   border-top-left-radius: 7px;
   border-top-right-radius: 7px;
   color: #ffffff;

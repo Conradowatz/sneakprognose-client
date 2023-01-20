@@ -1,17 +1,24 @@
 <template>
-  <DataContainer title="Sneak einreichen" hasClose="true" @close="this.$emit('close')">
+  <DataContainer title="Sneak einreichen" hasClose="true" @close="this.$router.push(`/cinema/${cinema.id}`)">
     <div class="addHintContainer">
-      <h4>Kino: {{ cinema.name }}</h4>
-      <form>
-        <label>Datum*</label>
-        <input type="date" v-model="sneakDate">
-        <br/>
-        <label>IMDB*</label>
-        <input type="text" v-model="imdbLink" placeholder="https://www.imdb.com/title/...">
-        <label>Kinostart</label>
-        <input type="date" v-model="startDate">
-        <br/>
-        <input type="button" value="Einreichen" @click="submit">
+      <form v-if="cinema">
+        <div class="form-entry">
+          <label>Kino</label>
+          <div class="selected-movie">{{cinema.name}} {{cinema.city}}</div>
+        </div>
+        <div class="form-entry">
+          <label>Datum</label>
+          <input type="date" v-model="sneakDate">
+        </div>
+        <div class="form-entry">
+          <label>Film</label>
+          <MovieSearch v-if="!selectedMovie" @select="selectMovie"/>
+          <div class="selected-movie" v-if="selectedMovie">
+            <div>{{selectedMovie.name}} ({{selectedMovie.year}})</div>
+            <a @click="selectedMovie = null">x</a>
+          </div>
+        </div>
+        <input type="button" value="Einreichen" @click="submit" :disabled="passesChecks()">
       </form>
       <div class="error" v-if="error">
         {{ this. error }}
@@ -22,33 +29,45 @@
 
 <script>
 import DataContainer from "./DataContainer.vue";
+import MovieSearch from "@/components/MovieSearch.vue";
 export default {
   name: "AddHintContainer",
-  components: {DataContainer},
-  props: ["cinema"],
-  emits: ["added"],
+  components: {MovieSearch, DataContainer},
   data() {
     return {
+      cinema: null,
       sneakDate: "",
-      imdbLink: "",
-      startDate: "",
+      selectedMovie: null,
       error: null
+    }
+  },
+  mounted() {
+    if (!isNaN(parseInt(this.$route.params.cinemaId))) {
+      this.$api.getCinema(this.$route.params.cinemaId).then((c) => this.cinema = c);
     }
   },
   methods: {
     submit() {
       this.error = null;
-      this.$api.addHint(this.cinema.id, this.sneakDate, this.imdbLink, this.startDate)
+      this.$api.addHint(this.cinema.id, this.sneakDate, this.selectedMovie.tmdbId)
           .then((response) => {
             if ("error" in response) {
               this.error = response.error;
             } else {
-              this.$emit("added", this.response);
+              this.error = null;
+              this.$router.push(`/cinema/${this.cinema.id}`);
             }
           })
           .catch((reason) => {
             this.error = "Fehler beim Verarbeiten der Daten.";
           })
+    },
+    selectMovie(movie) {
+      this.selectedMovie = movie;
+    },
+    passesChecks() {
+      let now = new Date().toISOString().substring(0, 10);
+      return this.sneakDate == "" || this.selectedMovie == null || this.sneakDate > now;
     }
   }
 }
@@ -63,9 +82,41 @@ h4 {
   padding: 10px;
 }
 label {
-  margin-right: 20px;
+  margin-bottom: 5px;
 }
-input[type=text] {
-  width: 100%;
+input[type=date] {
+  background-color: white;
+  padding: 0px 10px ;
+  height: 40px;
+  border-radius: 7px;
+  border: solid 1px #BFBFBF;
+}
+.selected-movie {
+  font-weight: bold;
+  display: flex;
+  margin-left: 5px;
+}
+a {
+  margin-left: 10px;
+}
+input[type="button"] {
+  margin-top: 10px;
+}
+form {
+  padding: 10px;
+}
+.form-entry {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  margin-top: 10px;
+}
+.form-entry:first-of-type {
+  margin-top: 0;
+}
+.error {
+  border-radius: 7px;
+  border: #ad0000 solid 2px;
+  padding: 10px;
 }
 </style>
