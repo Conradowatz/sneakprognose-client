@@ -85,11 +85,11 @@ label {
   margin-bottom: 5px;
 }
 input[type=date] {
-  background-color: white;
-  padding: 0px 10px ;
+  background-color: var(--color-background);
+  padding: 0 10px ;
   height: 40px;
   border-radius: 7px;
-  border: solid 1px #BFBFBF;
+  border: solid 1px var(--color-border);
 }
 .selected-movie {
   font-weight: bold;
@@ -116,7 +116,7 @@ form {
 }
 .error {
   border-radius: 7px;
-  border: #ad0000 solid 2px;
+  border: var(--color-negative) solid 2px;
   padding: 10px;
 }
 </style>

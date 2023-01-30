@@ -1,5 +1,6 @@
 export module SneakApi {
-    const baseUrl = "http://localhost:3000/api/";
+    const baseUrl = "https://api.sneakprognose.de/";
+    //const baseUrl = "http://localhost:3000/";
 
     function getResponse(endpoint: string): Promise<any> {
         return new Promise(((resolve, reject) => {
@@ -55,7 +56,7 @@ export module SneakApi {
                 resolve(allCinemas);
             } else {
                 refreshAllCinemas()
-                    .then((didRefresh) => {
+                    .then(() => {
                         resolve(allCinemas)
                     })
                     .catch(reason => reject(reason));

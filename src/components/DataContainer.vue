@@ -21,18 +21,18 @@ export default {
 
 <style scoped>
 .subcontainer {
-  border: solid #BFBFBF 1px;
+  border: solid var(--color-border) 1px;
   border-radius: 7px;
   width: 500px;
   max-width: 95vw;
-  background: #F2F2F2;
+  background: var(--color-background-primary);
 }
 .subc-heading {
-  background: #130b38;
-  border: solid #130b38 1px;
+  background: var(--color-container-top);
+  border: solid var(--color-container-top) 1px;
   border-top-left-radius: 7px;
   border-top-right-radius: 7px;
-  color: #ffffff;
+  color: var(--color-text-invert);
   padding: 7px;
 }
 .subc-content {
