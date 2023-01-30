@@ -2,7 +2,7 @@
   <div class="upper-border"/>
   <div class="title-container">
     <div class="title">
-      <img src="../assets/icon_small.png" alt="Sneakprognose" />
+      <img src="../assets/logo.svg" alt="Sneakprognose" />
       <h1>SneakPrognose.de</h1>
     </div>
   </div>
@@ -27,6 +27,7 @@ export default {
     }
   },
   mounted() {
+    document.title = "Sneakprognose";
     this.$api.getAllCinemas().then((c) => this.cinemaList = c);
   }
 }
@@ -69,10 +70,10 @@ h1 {
 .upper-border {
   height: 30px;
   width: 100%;
-  background: #810D41;
-  box-shadow: 5px 5px 5px #c1c1c1;
+  background: var(--color-nav-bar);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.26);
 }
-a.add-cinema {
+.add-cinema {
   margin-bottom: 20px;
 }
 </style>

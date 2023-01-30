@@ -3,8 +3,8 @@
     <div class="search-container">
       <img src="../assets/search.png" alt="Search" />
       <input type="text" class="textinput" id="myInput" :placeholder="placeholder"
-             @input="registerChange" v-model="typed" @click="registerChange"
-             @keydown="keydown" :style="{'background-color': backColor}" />
+             :value="typed" @click="registerChange"
+             @input="registerChange" @keydown="keydown" :style="{'background-color': backColor}" />
     </div>
     <div v-if="suggestions.length>0" class="autocomplete-items">
       <div v-for="(suggestion, index) in suggestions"
@@ -40,9 +40,10 @@ export default {
     document.removeEventListener("click", this.closeSuggestions);
   },
   methods: {
-    registerChange() {
+    registerChange(event) {
       if (this.timerId != null) clearTimeout(this.timerId);
       this.timerId = setTimeout(() => {
+        this.typed = event.target.value;
         this.$emit("change", this.typed);
       }, 500);
     },
@@ -90,14 +91,14 @@ export default {
 <style scoped>
 input {
   border: 1px solid transparent;
-  background-color: #F2F2F2;
+  background-color: var(--color-background-primary);
   padding: 10px;
   font-size: 16px;
 }
 .search-container {
   border-radius: 7px;
-  border: solid 1px #BFBFBF;
-  background-color: #F2F2F2;
+  border: solid 1px var(--color-border);
+  background-color: var(--color-background-primary);
 }
 img {
   height: 30px;
@@ -119,7 +120,7 @@ input[type="text"] {
 }
 .autocomplete-items {
   position: absolute;
-  border: 1px solid #d4d4d4;
+  border: 1px solid var(--color-border);
   border-bottom: none;
   border-top: none;
   z-index: 99;
@@ -129,20 +130,19 @@ input[type="text"] {
   right: 0;
   max-height: 200px;
   overflow-y: auto;
+  border-bottom-right-radius: 7px;
+  border-bottom-left-radius: 7px;
 }
 .autocomplete-items div {
   padding: 10px;
   cursor: pointer;
-  background-color: #fff;
-  border-bottom: 1px solid #d4d4d4;
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
 }
 .autocomplete-items div:hover {
-  /*when hovering an item:*/
-  background-color: #e9e9e9;
+  background-color: var(--color-background-secondary);
 }
 .autocomplete-active {
-  /*when navigating through the items using the arrow keys:*/
-  background-color: DodgerBlue !important;
-  color: #ffffff;
+  background-color: var(--color-hover) !important;
 }
 </style>

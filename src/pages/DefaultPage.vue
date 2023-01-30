@@ -1,65 +1,76 @@
 <template>
   <div class="title-bar">
-    <img src="../assets/icon_small.png" alt="Sneakprognose">
+    <img src="../assets/logo.svg" alt="Sneakprognose">
     <RouterLink to="/"><h1>SneakPrognose.de</h1></RouterLink>
     <div class="filler"/>
     <CinemaSearch :defaultCinema="selectedCinema" class="search"/>
+    <div class="cinema-name" v-if="selectedCinema">{{selectedCinema.name}} {{selectedCinema.city}}</div>
   </div>
   <div :class="{'nav-bar': true, open: isNavbarOpen, closed: !isNavbarOpen}">
     <div class="nav-item sidebar-open" @click="isNavbarOpen = !isNavbarOpen">
-      <img src="../assets/menu.png" v-if="!isNavbarOpen">
-      <img src="../assets/close_menu.png" v-if="isNavbarOpen">
+      <img src="../assets/menu.png" v-if="!isNavbarOpen" alt="Menü">
+      <img src="../assets/close_menu.png" v-if="isNavbarOpen" alt="Schließen">
       <div>Navigation</div>
     </div>
     <RouterLink to="/">
       <div class="nav-item collapsable">
-        <img src="../assets/home.png">
+        <img src="../assets/home.png" alt="Kinos">
         <div>Kinoauswahl</div>
       </div>
     </RouterLink>
-    <RouterLink :to="`/cinema/${selectedCinema.id}/add_sneak`" v-if="selectedCinema">
+    <RouterLink :to="`/cinema/${selectedCinema.id}/add_sneak`" @click="isNavbarOpen = false"
+                v-if="selectedCinema && !$route.path.includes('add_sneak')">
       <div class="nav-item collapsable">
-        <img src="../assets/movie.png">
+        <img src="../assets/movie.png" alt="Eintragen">
         <div>Sneak eintragen</div>
       </div>
     </RouterLink>
-    <RouterLink to="/add_cinema">
+    <RouterLink :to="`/cinema/${selectedCinema.id}`" @click="isNavbarOpen = false"
+                v-if="selectedCinema && $route.path.includes('add_sneak')">
       <div class="nav-item collapsable">
-        <img src="../assets/add.png">
+        <img src="../assets/movie.png" alt="Kino">
+        <div>Zum Kino</div>
+      </div>
+    </RouterLink>
+    <RouterLink to="/add_cinema" @click="isNavbarOpen = false">
+      <div class="nav-item collapsable">
+        <img src="../assets/add_circle.png" alt="Hinzufügen">
         <div>Kino hinzufügen</div>
       </div>
     </RouterLink>
-    <RouterLink to="/info">
+    <RouterLink to="/info" @click="isNavbarOpen = false">
       <div class="nav-item collapsable">
-        <img src="../assets/info.png">
+        <img src="../assets/info.png" alt="Infos">
         <div>Informationen</div>
-      </div>
-    </RouterLink>
-    <RouterLink to="/contact">
-      <div class="nav-item collapsable">
-        <img src="../assets/contact.png">
-        <div>Kontakt</div>
       </div>
     </RouterLink>
   </div>
   <div id="main" class="middle">
-    <slot/>
+    <RouterView></RouterView>
   </div>
 </template>
 
 <script>
-import MovieTable from "@/components/MovieTable.vue";
-import HintTable from "@/components/HintTable.vue";
-import AddHintContainer from "@/components/AddHintContainer.vue";
 import CinemaSearch from "@/components/CinemaSearch.vue";
+import {routeLocationKey} from "vue-router";
 export default {
   name: "CinemaPage",
+  computed: {
+    routeLocationKey() {
+      return routeLocationKey
+    }
+  },
   components: {CinemaSearch},
-  props: ["selectedCinema"],
   emits: [],
   data() {
     return {
-      isNavbarOpen: false
+      isNavbarOpen: false,
+      selectedCinema: null
+    }
+  },
+  mounted() {
+    if (!isNaN(parseInt(this.$route.params.cinemaId))) {
+      this.$api.getCinema(this.$route.params.cinemaId).then((c) => this.selectedCinema = c);
     }
   },
   methods: {}
@@ -84,7 +95,7 @@ export default {
 h1 {
   padding: 0;
   margin: 0;
-  color: black;
+  color: var(--color-primary-text);
   cursor: pointer;
 }
 .filler {
@@ -103,13 +114,13 @@ h1 {
     justify-content: start !important;
   }
   .nav-bar.open {
-    height: 320px !important;
+    height: 260px !important;
   }
   .nav-bar.closed .nav-item.collapsable {
     display: none !important;
   }
   .nav-item {
-    padding: 10px !important;
+    padding: 10px 0 !important;
     width: 100% !important;
   }
   .nav-item > img {
@@ -129,12 +140,16 @@ h1 {
   .search {
     display: none;
   }
+  .cinema-name {
+    display: unset !important;
+  }
 }
 #main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px;
+  padding: 10px 30px;
+  max-width: 100%;
 }
 
 .nav-bar {
@@ -142,7 +157,7 @@ h1 {
   gap: 30px;
   justify-content: center;
   height: 40px;
-  background: #810D41;
+  background: var(--color-nav-bar);
   transition: 0.5s;
 }
 .nav-item {
@@ -154,16 +169,22 @@ h1 {
   height: 30px;
 }
 .nav-item:hover {
-  background: #9b2f60;
+  background: var(--color-nav-bar-hover);
 }
 .nav-item > img {
   height: 20px;
   filter: invert(100%);
 }
 .nav-item > div {
-  color: white;
+  color: var(--color-text-invert);
 }
 .sidebar-open {
   display: none;
+}
+.cinema-name {
+  display: none;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
 }
 </style>

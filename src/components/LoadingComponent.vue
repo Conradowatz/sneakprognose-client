@@ -37,7 +37,7 @@ span{
   width: 25px;
   margin-right: 10px;
   border-radius: 50%;
-  background-color: #130b38;
+  background-color: var(--color-container-top);
   animation: loading 1s linear infinite;
 }
 /* Creating the loading animation*/

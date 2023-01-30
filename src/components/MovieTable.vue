@@ -1,5 +1,5 @@
 <template>
-  <DataContainer id="movies-container" title="Filme">
+  <DataContainer id="movies-container" title="Prognose">
     <table>
       <thead>
         <tr>
@@ -70,11 +70,11 @@ td, th {
 }
 th {
   text-align: start;
-  background: #130b38;
-  color: white;
+  background: var(--color-container-top);
+  color: var(--color-text-invert);
 }
 tr:nth-child(even) {
-  background: #dedede;
+  background: var(--color-background-secondary);
 }
 td:first-child, th:first-child {
   padding-left: 20px;
@@ -84,7 +84,7 @@ td:last-child, th:last-child {
 }
 .confidence {
   height: 15px;
-  background: #252525;
+  background: var(--color-dark);
   width: 0;
 }
 .confidence-cell {
@@ -100,7 +100,7 @@ td:last-child, th:last-child {
 }
 .genres {
   width: fit-content;
-  color: #5e5e5e;
+  color: var(--color-secondary-text);
   font-size: 14px;
 }
 </style>

@@ -1,9 +1,7 @@
 <template>
-  <DefaultPage :selectedCinema="selectedCinema">
-    <div class="two-split">
-      <RouterView></RouterView>
-    </div>
-  </DefaultPage>
+  <div class="two-split">
+    <RouterView></RouterView>
+  </div>
 </template>
 
 <script>
@@ -24,6 +22,7 @@ export default {
     let id = parseInt(this.cinemaId);
     if (!isNaN(id)) {
       this.$api.getCinema(id).then((cinema) => {
+        document.title = `Sneakprognose - ${cinema.name} ${cinema.city}`;
         this.selectedCinema = cinema;
         this.$api.addLastCinema(cinema);
       });
