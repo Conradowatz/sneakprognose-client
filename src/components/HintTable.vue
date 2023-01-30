@@ -3,10 +3,10 @@
     <table>
       <thead>
       <tr>
-        <th class="date">Datum</th>
+        <th>Datum</th>
         <th>Film</th>
-        <th>Score</th>
-        <th class="action">Aktion</th>
+        <th></th>
+        <th><RouterLink to="/info#mitmachen">Korrekt?</RouterLink></th>
       </tr>
       </thead>
       <tbody>
@@ -17,10 +17,10 @@
         </td>
         <td class="score">{{ hint.score }}</td>
         <td class="action">
-          <img src="../assets/right.png" alt="Upvote" @click="vote(hint, true)"
-               :class="{ 'voted-up': hasSavedVote(hint.id, true), upvote: true }">
-          <img src="../assets/wrong.png" alt="Downvote" @click="vote(hint, false)"
-               :class="{ 'voted-down': hasSavedVote(hint.id, false), downvote: true }">
+          <div><img src="../assets/right.png" alt="Zustimmen" @click="vote(hint, true)"
+               :class="{ 'voted-up': hasSavedVote(hint.id, true), upvote: true }"></div>
+          <div><img src="../assets/wrong.png" alt="Ablehnen" @click="vote(hint, false)"
+                :class="{ 'voted-down': hasSavedVote(hint.id, false), downvote: true }"></div>
         </td>
       </tr>
       </tbody>
@@ -41,53 +41,72 @@ export default {
   },
   data() {
     return {
-        hints: []
+        hints: [],
+        isVoting: false
     }
   },
   methods: {
     getSavedVotes(upVotes) {
-      if (localStorage.getItem("votedHints" + (upVotes ? "Up" : "Down")) == null) {
-        localStorage.setItem("votedHints" + (upVotes ? "Up" : "Down"), "");
+      let string = localStorage.getItem("votedHints" + (upVotes ? "Up" : "Down"));
+      if (string == null) {
+        localStorage.setItem("votedHints" + (upVotes ? "Up" : "Down"), JSON.stringify([]));
       }
-      return localStorage.getItem("votedHints" + (upVotes ? "Up" : "Down")).split(",");
+      let arr;
+      try {
+        arr = JSON.parse(localStorage.getItem("votedHints" + (upVotes ? "Up" : "Down")));
+      } catch (e) {
+        localStorage.setItem("votedHints" + (upVotes ? "Up" : "Down"), JSON.stringify([]));
+        arr = [];
+      }
+      return arr;
     },
     addSavedVote(id, upVotes) {
       let arr = this.getSavedVotes(upVotes);
       arr.push(id);
-      localStorage.setItem("votedHints" + (upVotes ? "Up" : "Down"), arr.join(","));
+      localStorage.setItem("votedHints" + (upVotes ? "Up" : "Down"), JSON.stringify(arr));
     },
     hasSavedVote(id, upVotes) {
       let arr = this.getSavedVotes(upVotes);
-      return arr.includes(id.toString());
+      return arr.includes(id);
     },
     removeSavedVote(id, upVotes) {
       let arr = this.getSavedVotes(upVotes);
       arr.splice(arr.indexOf(id), 1);
-      localStorage.setItem("votedHints" + (upVotes ? "Up" : "Down"), arr.join(","));
+      localStorage.setItem("votedHints" + (upVotes ? "Up" : "Down"), JSON.stringify(arr));
     },
     vote(hint, isUp) {
       if (localStorage.getItem("available") == null) return;
 
       if (this.hasSavedVote(hint.id, isUp)) {
+        // if we already voted in that direction, remove vote
         this.attemptVote(hint, !isUp, 1, true, isUp, false);
       } else {
         if (this.hasSavedVote(hint.id, !isUp)) {
+          // if we previously voted in the other direction, remove vote and add new
           this.attemptVote(hint, isUp, 2, true, !isUp, true);
         } else {
+          // if we did not previously vote, just save it
           this.attemptVote(hint, isUp, 1, false, null, true);
         }
       }
     },
     attemptVote(hint, isUpvote, count, remove, removeUp, save) {
-      this.$api.vote(hint.id, isUpvote, count).then((newHint => {
-        if (remove) {
-          this.removeSavedVote(hint.id, removeUp);
-        }
-        if (save) {
-          this.addSavedVote(hint.id, isUpvote);
-        }
-        hint.score = newHint.score;
-      }));
+      if (this.isVoting) return;
+      this.isVoting = true;
+      this.$api.vote(hint.id, isUpvote, count)
+          .then((newHint => {
+            if (remove) {
+              this.removeSavedVote(hint.id, removeUp);
+            }
+            if (save) {
+              this.addSavedVote(hint.id, isUpvote);
+            }
+            hint.score = newHint.score;
+            this.isVoting = false;
+          }))
+          .catch((reason) => {
+            this.isVoting = false;
+          });
     },
     parseDay(dateString) {
       let dateInts = dateString.split("-");
@@ -135,9 +154,18 @@ td:last-child, th:last-child {
   padding-right: 20px;
 }
 img {
-  width: 20px;
-  padding-right: 10px;
+  width: 30px;
+  padding: 5px;
   filter: none;
+}
+.action > div {
+  border-radius: 20px;
+  width: fit-content;
+  height: 40px;
+  float: right;
+}
+.action > div:hover {
+  background: var(--color-hover);
 }
 img.voted-up {
   filter: invert(13%) sepia(98%) saturate(4354%) hue-rotate(88deg) brightness(88%) contrast(88%);
@@ -158,6 +186,8 @@ img.downvote:hover {
 }
 .date {
   display: flex;
+  height: 30px;
+  align-items: center;
 }
 @media screen and (max-width: 450px) {
   .date {
@@ -165,7 +195,12 @@ img.downvote:hover {
   }
 }
 .action {
-  min-width: 60px;
+  min-width: 80px;
+  padding: 0;
+  text-align: center;
+}
+th > a {
+  color: var(--color-text-invert);
 }
 .score {
   text-align: right;

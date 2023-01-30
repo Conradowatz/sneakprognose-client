@@ -1,5 +1,5 @@
 <template>
-  <DataContainer id="cinema-container" title="Kinos">
+  <DataContainer id="cinema-container" title="Kino Vorschläge">
     <RouterLink :to="`/cinema/${cinema.id}`" v-for="cinema in cinemaList">
       <p>
         {{ cinema.name + " " + cinema.city }}
@@ -36,11 +36,11 @@ p {
   font-weight: normal;
 }
 a:nth-child(even) > p {
-  background: #dedede;
+  background: var(--color-background-secondary);
 }
 
 a:hover > p {
-  background: #c39696;
+  background: var(--color-hover);
   cursor: pointer;
 }
 </style>
