@@ -17,26 +17,31 @@ a {
     font-size: 12px;
     margin-bottom: 10px;
 }
-/*
-.border-container {
-    display: flex;
-    flex-direction: row;
+
+:root {
+    --color-container-top: #130b38;
+    --color-text-invert: white;
+    --color-nav-bar: #810D41;
+    --color-nav-bar-hover: #9b2f60;
+    --color-primary-text: black;
+    --color-secondary-text: #5e5e5e;
+    --color-dark: #252525;
+    --color-background: white;
+    --color-background-primary: #F2F2F2;
+    --color-background-secondary: #dedede;
+    --color-hover: #c5a0a0;
+    --color-border: #BFBFBF;
+    --color-negative: #ad0000;
+    --color-positive: #015b01;
 }
-.middle {
-    flex-grow: 1;
-    min-height: 100vh;
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: all 0.5s ease;
 }
-.border-side-left {
-    width: 30px;
-    background: #810D41;
-    box-shadow: 5px 5px 5px #c1c1c1;
+
+.fade-enter-from,
+.fade-leave-to {
+
+    transform: translateX(100%);
 }
-.border-side-right {
-    width: 30px;
-    background: #810D41;
-}
-@media screen and (max-width: 700px) {
-    .border-side-left, .border-side-right {
-        display: none;
-    }
-}*/
