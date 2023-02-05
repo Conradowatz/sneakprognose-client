@@ -2,8 +2,7 @@
   <SearchComponent :suggestions="suggestions" :titleFunction="(c) => c.name + ' ' + c.city"
                    @change="makeSuggestions" @close="suggestions = []" @select="selectCinema"
                    placeholder="Kino suchen..."
-                   :defaultText="defaultCinema ? defaultCinema.name + ' ' + defaultCinema.city : null"
-                   :backColor="defaultCinema ? 'white' : null"/>
+                   :defaultText="defaultCinema ? defaultCinema.name + ' ' + defaultCinema.city : null"/>
 </template>
 
 <script>

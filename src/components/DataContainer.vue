@@ -2,6 +2,7 @@
   <div :id="id" class="subcontainer">
     <img v-if="hasAdd" src="../assets/add.svg" alt="Hinzufügen" class="upper-button" @click="this.$emit('add')">
     <img v-if="hasClose" src="../assets/close.svg" alt="Schließen" class="upper-button" @click="this.$emit('close')">
+    <img v-if="hasShare" src="../assets/share.svg" alt="Teilen" class="upper-button" @click="this.$emit('share')">
     <div class="subc-heading">
       <h3>{{ title }}</h3>
     </div>
@@ -14,8 +15,8 @@
 <script>
 export default {
   name: "DataContainer",
-  props: ["id", "title", "hasAdd", "hasClose"],
-  emits: ["add", "close"]
+  props: ["id", "title", "hasAdd", "hasClose", "hasShare"],
+  emits: ["add", "close", "share"]
 }
 </script>
 

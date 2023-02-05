@@ -2,10 +2,12 @@ body {
     padding: 0;
     margin: 0;
     font: 16px Arial;
+    background: var(--color-background);
+    color: var(--color-primary-text);
 }
 a {
     text-decoration: none;
-    color: black;
+    color: var(--color-primary-text);
     font-weight: bold;
     cursor: pointer;
 }
@@ -33,6 +35,25 @@ a {
     --color-border: #BFBFBF;
     --color-negative: #ad0000;
     --color-positive: #015b01;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-container-top: #170e3b;
+        --color-text-invert: white;
+        --color-nav-bar: #810D41;
+        --color-nav-bar-hover: #812751;
+        --color-primary-text: #e0e0e0;
+        --color-secondary-text: #949494;
+        --color-dark: #939393;
+        --color-background: #272b36;
+        --color-background-primary: #1d1d21;
+        --color-background-secondary: #2a2a2d;
+        --color-hover: #483939;
+        --color-border: #252c33;
+        --color-negative: #ad0000;
+        --color-positive: #015b01;
+    }
 }
 
 .fade-enter-active,

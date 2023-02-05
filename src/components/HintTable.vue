@@ -141,11 +141,11 @@ td, th {
 }
 th {
   text-align: start;
-  background: #130b38;
+  background: var(--color-container-top);
   color: white;
 }
 tr:nth-child(even) {
-  background: #dedede;
+  background: var(--color-background-secondary);
 }
 td:first-child, th:first-child {
   padding-left: 20px;
@@ -157,6 +157,11 @@ img {
   width: 30px;
   padding: 5px;
   filter: none;
+}
+@media (prefers-color-scheme: dark) {
+  img {
+    filter: invert(80%);
+  }
 }
 .action > div {
   border-radius: 20px;

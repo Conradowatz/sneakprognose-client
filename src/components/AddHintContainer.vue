@@ -90,6 +90,7 @@ input[type=date] {
   height: 40px;
   border-radius: 7px;
   border: solid 1px var(--color-border);
+  color: var(--color-primary-text);
 }
 .selected-movie {
   font-weight: bold;
@@ -101,6 +102,7 @@ a {
 }
 input[type="button"] {
   margin-top: 10px;
+  padding: 5px;
 }
 form {
   padding: 10px;
