@@ -4,7 +4,7 @@
       <img src="../assets/search.png" alt="Search" />
       <input type="text" class="textinput" id="myInput" :placeholder="placeholder"
              :value="typed" @click="registerChange"
-             @input="registerChange" @keydown="keydown" :style="{'background-color': backColor}" />
+             @input="registerChange" @keydown="keydown" />
     </div>
     <div v-if="suggestions.length>0" class="autocomplete-items">
       <div v-for="(suggestion, index) in suggestions"
@@ -19,7 +19,7 @@
 <script>
 export default {
   name: "SearchComponent",
-  props: ["placeholder", "suggestions", "titleFunction", "backColor", "defaultText"],
+  props: ["placeholder", "suggestions", "titleFunction", "defaultText"],
   emits: ["select", "change", "close"],
   watch: {
     defaultText(text) {
@@ -106,12 +106,18 @@ img {
   top: 5px;
   left: 5px
 }
+@media (prefers-color-scheme: dark) {
+  img {
+    filter: invert(100%);
+  }
+}
 input[type="text"] {
   width: 300px;
   max-width: calc(100vw - 120px);
   padding: 0 10px 0 35px;
   height: 40px;
   border-radius: 7px;
+  color: var(--color-primary-text);
 }
 .autocomplete {
   /*the container must be positioned relative:*/

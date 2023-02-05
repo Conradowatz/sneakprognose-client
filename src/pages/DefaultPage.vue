@@ -1,10 +1,15 @@
 <template>
   <div class="title-bar">
-    <img src="../assets/logo.svg" alt="Sneakprognose">
-    <RouterLink to="/"><h1>SneakPrognose.de</h1></RouterLink>
+    <RouterLink to="/">
+      <img src="../assets/logo.svg" alt="Sneakprognose" class="title-img">
+    </RouterLink>
+    <RouterLink to="/">
+      <h1>SneakPrognose.de</h1>
+    </RouterLink>
+    <div class="filler"/>
+    <h2 class="cinema-name" v-if="selectedCinema">{{selectedCinema.name}} {{selectedCinema.city}}</h2>
     <div class="filler"/>
     <CinemaSearch :defaultCinema="selectedCinema" class="search"/>
-    <div class="cinema-name" v-if="selectedCinema">{{selectedCinema.name}} {{selectedCinema.city}}</div>
   </div>
   <div :class="{'nav-bar': true, open: isNavbarOpen, closed: !isNavbarOpen}">
     <div class="nav-item sidebar-open" @click="isNavbarOpen = !isNavbarOpen">
@@ -69,9 +74,17 @@ export default {
     }
   },
   mounted() {
-    if (!isNaN(parseInt(this.$route.params.cinemaId))) {
-      this.$api.getCinema(this.$route.params.cinemaId).then((c) => this.selectedCinema = c);
-    }
+    this.$watch(
+        () => this.$route.params,
+        () => {
+          if (!isNaN(parseInt(this.$route.params.cinemaId))) {
+            this.$api.getCinema(this.$route.params.cinemaId).then((c) => this.selectedCinema = c);
+          }
+        },
+        // fetch the data when the view is created and the data is
+        // already being observed
+        { immediate: true }
+    )
   },
   methods: {}
 }
@@ -87,10 +100,15 @@ export default {
   justify-content: right;
   flex-wrap: wrap;
 }
-.title-bar > img {
+img.title-img {
   padding-left: 20px;
   height: 50px;
   margin-right: -10px;
+}
+@media (prefers-color-scheme: dark) {
+  img.title-img {
+    filter: invert(80%);
+  }
 }
 h1 {
   padding: 0;
@@ -129,19 +147,20 @@ h1 {
   .sidebar-open {
     display: flex !important;
   }
-}
-@media screen and (max-width: 500px) {
-  .title-bar > img {
-    height: 40px;
-  }
-  h1 {
-    font-size: 25px;
-  }
   .search {
     display: none;
   }
   .cinema-name {
-    display: unset !important;
+    width: 100%;
+    font-size: 18px;
+  }
+}
+@media screen and (max-width: 500px) {
+  img.title-img {
+    height: 40px;
+  }
+  h1 {
+    font-size: 25px;
   }
 }
 #main {
@@ -182,9 +201,9 @@ h1 {
   display: none;
 }
 .cinema-name {
-  display: none;
   font-weight: bold;
-  width: 100%;
   text-align: center;
+  padding: 0;
+  margin: 0;
 }
 </style>

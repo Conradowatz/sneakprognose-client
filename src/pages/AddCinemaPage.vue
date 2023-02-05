@@ -73,6 +73,7 @@ input[type="text"], input[type="email"] {
   border-radius: 5px;
   border: var(--color-border) solid 1px;
   background: var(--color-background-primary);
+  color: var(--color-primary-text);
   padding: 5px;
   margin-top: 5px;
 }

@@ -1,5 +1,5 @@
 <template>
-  <DataContainer id="movies-container" title="Prognose">
+  <DataContainer id="movies-container" title="Prognose" :hasShare="canShare()" @share="share">
     <table>
       <thead>
         <tr>
@@ -14,7 +14,7 @@
         <tr v-for="(sneak, index) in sneaks">
           <td>{{ index + 1 }}</td>
           <td class="confidence-cell"><div class="confidence" :style=" { width: 100*sneak.confidence/maxConfidence+'%' }"/></td>
-          <td><a :href="`https://www.themoviedb.org/movie/${sneak.movie_tmdbId}`" target="_blank">{{ sneak.movie_name }}</a> <div class="genres"> {{ sneak.movie_genres }}</div></td>
+          <td><a :href="`https://www.themoviedb.org/movie/${sneak.movie_tmdbId}?language=de-DE`" target="_blank">{{ sneak.movie_name }}</a> <div class="genres"> {{ sneak.movie_genres }}</div></td>
           <td class="rating">{{ sneak.movie_rating == 0 ? "?" : (sneak.movie_rating/10).toFixed(1) }}</td>
           <td class="daysTill">+{{ sneak.daysTill }}</td>
         </tr>
@@ -45,6 +45,25 @@ export default {
           }
         }
       })
+    },
+    getShareData() {
+      return {title: document.title,
+        text: "Diese Filme könnten in der Sneak laufen",
+        url: document.URL};
+    },
+    share() {
+      try {
+        navigator.share(this.getShareData());
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    canShare() {
+      try {
+        return navigator.canShare(this.getShareData());
+      } catch (e) {
+        return false;
+      }
     }
   },
   data() {

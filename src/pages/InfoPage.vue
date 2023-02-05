@@ -6,7 +6,7 @@
     sie erst wenige Tage oder Wochen später.
 
     <h2 id="sneakprognose">Informationen zur Sneakprognose</h2>
-    Sneakprognose.de zeigt vorab Filme, welche in der Sneak-Preview laufen könnten. Die Berechnung basiert dabei auf
+    Sneakprognose.de zeigt vorab, welche Filme in der Sneak-Preview laufen könnten. Die Berechnung basiert dabei auf
     Nutzer-basierten Daten. Gehst du in eine Sneak-Preview-Vorstellung, kannst du im Nachhinein auf dieser Webseite
     eintragen, welchen Film du gesehen hast. Das hilft dabei, die Sneakprognose genauer zu machen. <br/>
     Die Idee dieses Dienstes basiert auf der Sneakprognose von "Score11", welche vormals ähnliche Funktionen aufwies.

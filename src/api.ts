@@ -37,12 +37,14 @@ export module SneakApi {
         return getResponse("city");
     }
 
-    let allCinemas: {id: number, name: string, city: string}[] = [];
+    let allCinemas: {[id: number] : {id: number, name: string, city: string}} = {};
     function refreshAllCinemas(): Promise<boolean> {
         return new Promise(((resolve, reject) => {
             getResponse("cinema")
                 .then((cinemas) => {
-                    allCinemas = cinemas;
+                    for (let cinema of cinemas) {
+                        allCinemas[cinema.id] = cinema;
+                    }
                     resolve(true);
                 })
                 .catch((reason => reject(reason)));
@@ -52,12 +54,12 @@ export module SneakApi {
 
     export function getAllCinemas(): Promise<Array<any>> {
         return new Promise<any>(((resolve, reject) => {
-            if (allCinemas.length > 0) {
-                resolve(allCinemas);
+            if (Object.keys(allCinemas).length > 0) {
+                resolve((<any>Object).values(allCinemas));
             } else {
                 refreshAllCinemas()
                     .then(() => {
-                        resolve(allCinemas)
+                        resolve((<any>Object).values(allCinemas))
                     })
                     .catch(reason => reject(reason));
             }
@@ -65,8 +67,8 @@ export module SneakApi {
     }
 
     export function getCinema(id: number): Promise<any> {
-        if (allCinemas.length > 0) {
-            return new Promise((resolve, reject) => resolve(allCinemas[id-1]));
+        if (Object.keys(allCinemas).length > 0) {
+            return new Promise((resolve, reject) => resolve(allCinemas[id]));
         } else {
             return getResponse("cinema?cinemaId=" + id);
         }

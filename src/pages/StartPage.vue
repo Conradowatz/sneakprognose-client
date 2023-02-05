@@ -44,11 +44,15 @@ export default {
   margin-right: -15px;
   height: 60px;
 }
+@media (prefers-color-scheme: dark) {
+  .title > img {
+    filter: invert(80%);
+  }
+}
 h1 {
   font-size: 40px;
   padding: 0;
   text-align: center;
-  color: black;
   float: right;
   margin: 5px 0 0;
 }
