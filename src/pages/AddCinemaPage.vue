@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <h2>Mein Kino ist nicht dabei</h2>
-    Wenn du dein Kino über die Suche nicht finden kannst, kann das zwei Gründe
+    Wenn du dein Kino über die Suche nicht finden kannst, kann das zwei Gründe haben:
     <ul>
-      <li>Der Name des Kinos ist anders eingetragen</li>
-      <li>Dein Kino ist noch nicht in unserer Liste</li>
+      <li>der Name des Kinos ist anders eingetragen</li>
+      <li>dein Kino ist noch nicht in unserer Liste</li>
     </ul>
     Bevor du versuchst, dein Kino als neu einzureichen, vergewissere dich bitte, dass es nicht unter anderer
     Schreibweise in der Liste vorhanden ist. Nutze die Suche um bspw. den Namen deiner Stadt einzugeben.
@@ -14,7 +14,7 @@
     Falls wir dein Kino nicht in unserer Liste haben, tut uns das leid. Du kannst mit dem unten stehenden
     Formular dein Kino als Vorschlag einreichen. Dabei wird eine E-Mail, mit den angegebenen Daten an uns gesendet.
     Wenn wir deine Informationen bestätigen konnten, bekommst du ggf. eine Bestätigungsmail, und kannst dein Kino
-    dann zukünftig nutzen. Angabe zur Person sind optional!
+    dann zukünftig nutzen. Angaben zur Person sind optional!
     <form v-if="!sent">
       <label>Dein Name</label>
       <input type="text" v-model="name"/>
@@ -31,11 +31,9 @@
 </template>
 
 <script>
-import DefaultPage from "@/pages/DefaultPage.vue";
-
 export default {
   name: "AddCinemaPage",
-  components: {DefaultPage},
+  components: {},
   data() {
     return {
       name: "",
