@@ -25,8 +25,9 @@ export default {
   border: solid var(--color-border) 1px;
   border-radius: 7px;
   width: 500px;
-  max-width: 95vw;
+  max-width: 100vw;
   background: var(--color-background-primary);
+  box-sizing: border-box;
 }
 .subc-heading {
   background: var(--color-container-top);

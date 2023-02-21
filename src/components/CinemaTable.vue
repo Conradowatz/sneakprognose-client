@@ -36,11 +36,11 @@ p {
   font-weight: normal;
 }
 a:nth-child(even) > p {
-  background: var(--color-background-secondary);
+  background-color: var(--color-background-secondary);
 }
 
 a:hover > p {
-  background: var(--color-hover);
+  background-color: var(--color-hover);
   cursor: pointer;
 }
 </style>
