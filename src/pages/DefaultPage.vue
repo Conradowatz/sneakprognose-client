@@ -126,7 +126,6 @@ h1 {
   .nav-bar {
     flex-direction: column;
     width: 100%;
-    float: right;
     padding: 10px 0 !important;
     gap: 5px !important;
     justify-content: start !important;
@@ -164,10 +163,10 @@ h1 {
   }
 }
 #main {
-  display: flex;
+  /*display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px 30px;
+  padding: 10px 30px;*/
   max-width: 100%;
 }
 
