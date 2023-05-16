@@ -14,7 +14,11 @@
           <label>Film</label>
           <MovieSearch v-if="!selectedMovie" @select="selectMovie"/>
           <div class="selected-movie" v-if="selectedMovie">
-            <div>{{selectedMovie.name}} ({{selectedMovie.year}})</div>
+            <div>
+              <a :href="`https://www.themoviedb.org/movie/${selectedMovie.tmdbId}`" target="_blank">
+                {{selectedMovie.name}} ({{selectedMovie.year}})
+              </a>
+            </div>
             <a @click="selectedMovie = null">x</a>
           </div>
         </div>
