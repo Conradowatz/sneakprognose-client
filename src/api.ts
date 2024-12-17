@@ -1,5 +1,6 @@
 export module SneakApi {
     const baseUrl = "https://api.sneakprognose.de/";
+    // change base url to localhost for development server
     //const baseUrl = "http://localhost:3000/";
 
     function getResponse(endpoint: string): Promise<any> {
